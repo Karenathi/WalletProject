@@ -6,10 +6,30 @@ info:
 paths:
   /currencies:
     get:
+      tags:
+        - "Currencies"
       summary: Get all currencies
       responses:
         '200':
           $ref: '#/components/responses/Success200'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '500':
+          $ref: '#/components/responses/Error500'
+    put:
+      tags:
+        - "Currencies"
+      summary: Update a currency
+      requestBody:
+        description: Currency data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyInput'
+      responses:
+        '204':
+          $ref: '#/components/responses/Success204'
         '404':
           $ref: '#/components/responses/NotFound404'
         '500':
@@ -42,4 +62,11 @@ components:
         application/json:
           example:
             error: Internal server error
-    
+  schemas:
+    CurrencyInput:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
