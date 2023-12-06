@@ -55,6 +55,20 @@ paths:
         '500':
           $ref: '#/components/responses/Error500'
 
+  /accounts:
+    get:
+      tags:
+        - "Accounts"
+      summary: Get all accounts
+      responses:
+        '200':
+          $ref: '#/components/responses/Success200'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '500':
+          $ref: '#/components/responses/Error500'
+
+
 
 components:
   responses:
