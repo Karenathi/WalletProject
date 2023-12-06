@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Currency API
+
+paths:
+  /currencies:
+    get:
+      summary: Get all currencies
+      responses:
+        '200':
+          $ref: '#/components/responses/Success200'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '500':
+          $ref: '#/components/responses/Error500'
+
+
+components:
+  responses:
+    Success200:
+      description: Successful response
+      content:
+        application/json:
+          example:
+            id: 1
+            name: Euro
+            code: EUR
+    Success204:
+      description: Successful update, no content
+
+    NotFound404:
+      description: Resource not found
+      content:
+        application/json:
+          example:
+            error: Currency not found
+
+    Error500:
+      description: Internal server error
+      content:
+        application/json:
+          example:
+            error: Internal server error
+    
