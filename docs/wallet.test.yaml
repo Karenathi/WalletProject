@@ -69,6 +69,8 @@ paths:
           $ref: '#/components/responses/Error500'
   /accounts/{id}:
     get:
+      tags:
+        - "Accounts"
       summary: Get an account by ID
       parameters:
         - name: id
@@ -84,7 +86,32 @@ paths:
           $ref: '#/components/responses/NotFound404'
         '500':
           $ref: '#/components/responses/Error500'
-
+    put:
+      tags:
+        - "Accounts"
+      summary: Update an account by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            description: ID of the account
+      requestBody:
+        description: Updated account data
+        required: true
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInput'
+      responses:
+        '204':
+          description: Successful update, no content
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '500':
+          $ref: '#/components/responses/Error500'
+          
 
 components:
   responses:
@@ -120,3 +147,50 @@ components:
           type: string
         code:
           type: string
+    AccountInput:
+      type: object
+      properties:
+        name:
+          type: string
+        currency:
+          $ref: '#/components/schemas/Currency'
+        code:
+          type: string
+        balance:
+          type: object
+          properties:
+            value:
+              type: number
+            datetime:
+              type: string
+              format: date-time
+          required:
+            - value
+            - datetime
+        type:
+          type: string
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+
+    Currency:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        amount:
+          type: number
+        datetime:
+          type: string
+          format: date-time
