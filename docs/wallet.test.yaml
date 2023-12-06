@@ -67,7 +67,23 @@ paths:
           $ref: '#/components/responses/NotFound404'
         '500':
           $ref: '#/components/responses/Error500'
-
+  /accounts/{id}:
+    get:
+      summary: Get an account by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the account
+      responses:
+        '200':
+          $ref: '#/components/responses/Success200'
+        '404':
+          $ref: '#/components/responses/NotFound404'
+        '500':
+          $ref: '#/components/responses/Error500'
 
 
 components:
