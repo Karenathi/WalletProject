@@ -69,5 +69,17 @@ public class Transaction {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    //ToString
+
+    @Override
+    public String toString() {
+        return "Transaction:" +
+                "id='" + id + '\'' +
+                ", category='" + amount + '\'' +
+                ", label ='" + label + '\'' +
+                ", date=" + date +
+                ", paymentId='" + type;
+    }
 }
 

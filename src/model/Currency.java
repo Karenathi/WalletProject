@@ -37,5 +37,15 @@ public class Currency {
     public void setCode(String code) {
         this.code = code;
     }
+
+    //ToString
+    @Override
+    public String toString() {
+        return "Currency" +
+                "id='" + id + '\'' +
+                ", currencyCode='" + id + '\'' +
+                ", currencyName='" + name + '\'' +
+                ", currencySymbol='" + code ;
+    }
 }
 
