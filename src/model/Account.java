@@ -82,6 +82,8 @@ public class Account {
         this.transactions = transactions;
     }
 
+
+    //Equals and HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -73,6 +73,7 @@ public class Transaction {
     }
 
 
+    //Equals and HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
