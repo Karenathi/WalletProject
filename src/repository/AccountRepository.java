@@ -6,10 +6,8 @@ import model.Currency;
 import model.Transaction;
 
 import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +105,103 @@ public class AccountRepository implements CrudOperations<Account> {
         }
 
         return transactions;
+    }
+
+    //Performing transaction in an account
+    public Account performTransaction (int accountId, Transaction transaction) {
+        Connection connection = null;
+        try {
+            connection = ConnectionConfiguration.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            Account account = findById(accountId);
+            double newBalance = account.getBalance().getValue();
+            if (account == null) {
+                throw new RuntimeException("The account with the id " + accountId + "does not exist");
+            }
+            if ("debit".equalsIgnoreCase(transaction.getType())) {
+                if (account.getType().equalsIgnoreCase("bank account")) {
+                    newBalance -= transaction.getAmount();
+                } else if (newBalance < transaction.getAmount()) {
+                    throw new RuntimeException("Insufficient balance to complete the transaction");
+                }
+                newBalance -= transaction.getAmount();
+            } else if ("credit".equalsIgnoreCase(transaction.getType())) {
+                newBalance += transaction.getAmount();
+            } else {
+                throw new RuntimeException("Transaction type not supported");
+            }
+            updateBalance(accountId, newBalance, connection);
+
+            insertTransaction(accountId, transaction, connection);
+
+            insertBalanceHistory(accountId, newBalance, transaction.getDate(), connection);
+
+            connection.commit();
+
+            Account updatedAccount = findById(accountId);
+
+            return updatedAccount;
+
+
+        } catch (Exception e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la transaction.", e);
+        } finally {
+            // Réactiver l'autocommit
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void updateBalance(int accountId, double newBalance, Connection connection) throws SQLException {
+        String sql = "UPDATE balance SET amount = ? WHERE account_id = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDouble(1, newBalance);
+            preparedStatement.setInt(2, accountId);
+
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    // Méthode pour insérer une nouvelle transaction dans la table 'transaction'
+    private void insertTransaction(int accountId, Transaction transaction, Connection connection) throws SQLException {
+        String sql = "INSERT INTO transaction (account_id, label, amount, transaction_type, transaction_date) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setString(2, transaction.getLabel());
+            preparedStatement.setDouble(3, transaction.getAmount());
+            preparedStatement.setString(4, transaction.getType());
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(transaction.getDate()));
+
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    private void insertBalanceHistory(int accountId, double newBalance, LocalDateTime transactionDate, Connection connection) throws SQLException {
+        String sql = "INSERT INTO balance_history (account_id, balance_amount, transaction_date) VALUES (?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setDouble(2, newBalance);
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(transactionDate));
+
+            preparedStatement.executeUpdate();
+        }
     }
 }
 
