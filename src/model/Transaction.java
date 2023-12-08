@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Transaction {
     private int id;
@@ -11,7 +12,8 @@ public class Transaction {
     private Account account;
 
     // Constructeurs, getters et setters
-    public Transaction() {}
+    public Transaction() {
+    }
 
     public Transaction(int id, String label, double amount, String type, LocalDateTime date, Account account) {
         this.id = id;
@@ -70,16 +72,33 @@ public class Transaction {
         this.account = account;
     }
 
-    //ToString
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaction that)) return false;
+        return getId() == that.getId() &&
+                Double.compare(that.getAmount(), getAmount()) == 0 &&
+                Objects.equals(getLabel(), that.getLabel()) &&
+                Objects.equals(getType(), that.getType()) &&
+                Objects.equals(getDate(), that.getDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLabel(), getAmount(), getType(), getDate());
+    }
 
     @Override
     public String toString() {
         return "Transaction:" +
                 "id='" + id + '\'' +
-                ", category='" + amount + '\'' +
-                ", label ='" + label + '\'' +
-                ", date=" + date +
-                ", paymentId='" + type;
+                ", amount='" + amount + '\'' +
+                ", label='" + label + '\'' +
+                ", date=" + date;
     }
 }
+
+
+
 
