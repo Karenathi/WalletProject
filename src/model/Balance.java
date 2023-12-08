@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Balance {
+    private int id;
     private double value;
     private LocalDateTime datetime;
 
@@ -11,6 +12,14 @@ public class Balance {
     public Balance(double value, LocalDateTime datetime) {
         this.value = value;
         this.datetime = datetime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getValue() {
@@ -29,26 +38,28 @@ public class Balance {
         this.datetime = datetime;
     }
 
-    //ToString
-    @Override
-    public String toString() {
-        return "Balance:" +
-                "value=" + value +
-                ", datetime=" + datetime;
-    }
-
-    //Equals and hashcode
-
+    // Equals and HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Balance balance)) return false;
-        return Double.compare(getValue(), balance.getValue()) == 0 && Objects.equals(getDatetime(), balance.getDatetime());
+        if (!(o instanceof Balance that)) return false;
+        return getId() == that.getId() &&
+                Double.compare(that.getValue(), getValue()) == 0 &&
+                Objects.equals(getDatetime(), that.getDatetime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getValue(), getDatetime());
+        return Objects.hash(getId(), getValue(), getDatetime());
+    }
+
+    // ToString
+    @Override
+    public String toString() {
+        return "Balance{" +
+                "id=" + id +
+                ", value=" + value +
+                ", datetime=" + datetime +
+                '}';
     }
 }
-
