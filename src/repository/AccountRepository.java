@@ -203,5 +203,57 @@ public class AccountRepository implements CrudOperations<Account> {
             preparedStatement.executeUpdate();
         }
     }
+
+    //Select the balance of an account in given date and time
+    public double getBalanceAtDateTime(int accountId, LocalDateTime dateTime) {
+        Connection connection = null;
+
+        try {
+            connection = ConnectionConfiguration.getInstance().getConnection();
+            List<Transaction> transactions = getTransactionsUntilDateTime(accountId, dateTime, connection);
+            double balance = 0.0;
+            for (Transaction transaction : transactions) {
+                if ("credit".equalsIgnoreCase("transaction.getType")) {
+                    balance += transaction.getAmount();
+                } else if ("debit".equalsIgnoreCase(transaction.getType())) {
+                    balance -= transaction.getAmount();
+                }
+            }
+            return balance;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la récupération du solde à la date et l'heure spécifiées.", e);
+        } finally {
+            // Fermer la connexion
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private List<Transaction> getTransactionsUntilDateTime(int accountId, LocalDateTime dateTime, Connection connection) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transaction WHERE account_id = ? AND transaction_date <= ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(dateTime));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Transaction transaction = createTransactionFromResultSet(resultSet);
+                    transactions.add(transaction);
+                }
+            }
+        }
+
+        return transactions;
+    }
+
 }
 
