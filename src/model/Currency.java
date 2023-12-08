@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Currency {
     private int id;
     private String name;
@@ -38,14 +40,31 @@ public class Currency {
         this.code = code;
     }
 
-    //ToString
+
+
+    // Equals and HashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Currency that)) return false;
+        return getId() == that.getId() &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getCode(), that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getCode());
+    }
+
+    // ToString
     @Override
     public String toString() {
-        return "Currency" +
-                "id='" + id + '\'' +
-                ", currencyCode='" + id + '\'' +
-                ", currencyName='" + name + '\'' +
-                ", currencySymbol='" + code ;
+        return "Currency{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                '}';
     }
 }
 
