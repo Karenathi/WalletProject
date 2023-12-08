@@ -255,5 +255,62 @@ public class AccountRepository implements CrudOperations<Account> {
         return transactions;
     }
 
+    //Method to get the history of an account's balance in a date and time range
+    public List<BalanceHistoryEntry> getBalanceHistoryInDateTimeRange(int accountId, LocalDateTime startDateTime, LocalDateTime endDateTime){
+        Connection connection = null;
+        try{
+            connection = ConnectionConfiguration.getInstance().getConnection();
+
+            List<Transaction> transactions = getTransactionsInDateTimeRange(accountId, startDateTime, endDateTime, connection);
+
+            List<BalanceHistoryEntry> balanceHistory = new ArrayList<>();
+            double currentBalance = 0;
+
+            for (Transaction transaction : transactions) {
+                if ("credit".equalsIgnoreCase(transaction.getType())) {
+                    currentBalance += transaction.getAmount();
+                } else if ("debit".equalsIgnoreCase(transaction.getType())) {
+                    currentBalance -= transaction.getAmount();
+                }
+
+                balanceHistory.add(new BalanceHistoryEntry(transaction.getDate(), currentBalance));
+            }
+
+            return balanceHistory;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la récupération de l'historique du solde dans la plage de dates spécifiée.", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private List<Transaction> getTransactionsInDateTimeRange(int accountId, LocalDateTime startDateTime, LocalDateTime endDateTime, Connection connection) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transaction WHERE account_id = ? AND transaction_date BETWEEN ? AND ? ORDER BY transaction_date";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(startDateTime));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(endDateTime));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Transaction transaction = createTransactionFromResultSet(resultSet);
+                    transactions.add(transaction);
+                }
+            }
+        }
+
+        return transactions;
+    }
+
 }
 
