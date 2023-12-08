@@ -3,8 +3,14 @@ package repository;
 import java.util.List;
 
 public interface CrudOperations<T> {
-    public List<T> findAll();
-    public List<T> saveAll(List<T> toSave);
-    public T save(T toSave);
-    public T delete(T toDelete);
+
+    // Get all
+    List<T> findAll();
+
+    // Get by id
+    T findById(int id);
+
+    // Update by id
+    void updateById(int id, T updatedEntity);
+
 }
