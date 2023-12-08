@@ -14,8 +14,6 @@ public class Account {
     private List<Transaction> transactions;
 
     // Constructeurs, getters et setters
-
-
     public Account(int id,String name, Currency currency, String code, Balance balance, String type, List<Transaction> transactions) {
         this.id= id;
         this.name = name;
@@ -24,6 +22,10 @@ public class Account {
         this.balance = balance;
         this.type = type;
         this.transactions = transactions;
+    }
+
+    public Account() {
+
     }
 
     public int getId() {
