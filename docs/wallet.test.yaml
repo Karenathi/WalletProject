@@ -263,18 +263,13 @@ components:
       properties:
         name:
           type: string
-          example: "Euro"
         code:
           type: string
-          example: "EUR"
     AccountInput:
       type: object
       properties:
         name:
           type: string
-          enum:
-            - "current account"
-            - "savings account"
         currency:
           $ref: '#/components/schemas/Currency'
         code:
@@ -292,10 +287,6 @@ components:
             - datetime
         type:
           type: string
-          enum:
-            - "bank"
-            - "cash"
-            - "mobile money"
         transactions:
           type: array
           items:
