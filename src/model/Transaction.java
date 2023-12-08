@@ -11,7 +11,8 @@ public class Transaction {
     private LocalDateTime date;
 
     // Constructeurs, getters et setters
-    public Transaction() {}
+    public Transaction() {
+    }
 
     public Transaction(int id, String label, double amount, String type, LocalDateTime date, Account account) {
         this.id = id;
@@ -61,13 +62,16 @@ public class Transaction {
         this.date = date;
     }
 
-    //Equals and HashCode
-
+    // Equals and HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Transaction that)) return false;
-        return getId() == that.getId() && Double.compare(getAmount(), that.getAmount()) == 0 && Objects.equals(getLabel(), that.getLabel()) && Objects.equals(getType(), that.getType()) && Objects.equals(getDate(), that.getDate());
+        return getId() == that.getId() &&
+                Double.compare(that.getAmount(), getAmount()) == 0 &&
+                Objects.equals(getLabel(), that.getLabel()) &&
+                Objects.equals(getType(), that.getType()) &&
+                Objects.equals(getDate(), that.getDate());
     }
 
     @Override
@@ -75,16 +79,13 @@ public class Transaction {
         return Objects.hash(getId(), getLabel(), getAmount(), getType(), getDate());
     }
 
-
-    //ToString
-
+    // ToString
     @Override
     public String toString() {
         return "Transaction:" +
                 "id='" + id + '\'' +
-                ", category='" + amount + '\'' +
-                ", label ='" + label + '\'' +
+                ", amount='" + amount + '\'' +
+                ", label='" + label + '\'' +
                 ", date=" + date;
     }
 }
-
