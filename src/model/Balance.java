@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Balance {
+    int id;
     private double value;
     private LocalDateTime datetime;
 

@@ -3,6 +3,7 @@ package model;
 import java.util.List;
 
 public class Account {
+    private int id;
     private String name;
     private Currency currency;
     private String code;
@@ -13,7 +14,8 @@ public class Account {
     // Constructeurs, getters et setters
     public Account() {}
 
-    public Account(String name, Currency currency, String code, Balance balance, String type, List<Transaction> transactions) {
+    public Account(int id, String name, Currency currency, String code, Balance balance, String type, List<Transaction> transactions) {
+        this.id = id;
         this.name = name;
         this.currency = currency;
         this.code = code;
@@ -68,5 +70,13 @@ public class Account {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
