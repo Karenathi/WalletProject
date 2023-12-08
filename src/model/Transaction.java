@@ -9,7 +9,6 @@ public class Transaction {
     private double amount;
     private String type;
     private LocalDateTime date;
-    private Account account;
 
     // Constructeurs, getters et setters
     public Transaction() {
@@ -21,7 +20,6 @@ public class Transaction {
         this.amount = amount;
         this.type = type;
         this.date = date;
-        this.account = account;
     }
 
     public int getId() {
@@ -64,16 +62,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-
-    //Equals and HashCode
+    // Equals and HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +79,7 @@ public class Transaction {
         return Objects.hash(getId(), getLabel(), getAmount(), getType(), getDate());
     }
 
+    // ToString
     @Override
     public String toString() {
         return "Transaction:" +
@@ -99,7 +89,3 @@ public class Transaction {
                 ", date=" + date;
     }
 }
-
-
-
-

@@ -8,24 +8,22 @@ public class Balance {
     private double value;
     private LocalDateTime datetime;
 
-
     // Constructeurs, getters et setters
-    public Balance(int id,double value, LocalDateTime datetime) {
+    public Balance(double value, LocalDateTime datetime) {
         this.value = value;
         this.datetime = datetime;
     }
-
 
     public int getId() {
         return id;
     }
 
-    public double getValue() {
-        return value;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getValue() {
+        return value;
     }
 
     public void setValue(double value) {
@@ -65,4 +63,3 @@ public class Balance {
                 '}';
     }
 }
-
