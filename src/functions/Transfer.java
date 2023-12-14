@@ -1,7 +1,8 @@
-package repository;
+package functions;
 
 import model.Account;
 import model.Transaction;
+import repository.ConnectionConfiguration;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -55,7 +56,6 @@ public class Transfer {
         }
     }
 
-    // Méthode privée pour enregistrer l'historique du transfert
     private void recordTransferHistory(int debitTransactionId, int creditTransactionId, LocalDateTime transferDate, Connection connection) throws SQLException {
         String sql = "INSERT INTO TransferHistory (debit_transaction_id, credit_transaction_id, transfer_date) VALUES (?, ?, ?)";
 
@@ -133,6 +133,4 @@ public class Transfer {
             }
         }
     }
-
-
 }
