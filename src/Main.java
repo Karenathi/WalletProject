@@ -4,7 +4,10 @@ import repository.CurrencyRepository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import functions.CurrencyFunction;
 
 public class Main {
     public static void main(String[] args) {
@@ -38,6 +41,17 @@ public class Main {
             } else {
                 System.out.println("Currency with ID " + targetCurrencyId + " not found.");
             }
+
+
+            // Exemple d'appel de la fonction
+            LocalDateTime date = LocalDateTime.of(2023, 12, 6, 12, 0);
+            int sourceCurrencyId = 1;
+            targetCurrencyId = 2;
+
+            double weightedAverageRate = CurrencyFunction.calculateWeightedAverageExchangeRate(connection, date);
+
+            // Affichage du résultat
+            System.out.println("Taux de change moyen pondéré : " + weightedAverageRate);
 
         } finally {
             try {

@@ -7,6 +7,7 @@ public class Currency {
     private String name;
     private String code;
 
+
     // Constructeurs, getters et setters
     public Currency() {}
 
