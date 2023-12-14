@@ -42,15 +42,15 @@ public class Main {
                 System.out.println("Currency with ID " + targetCurrencyId + " not found.");
             }
 
+            // Test the calculateWeightedAverageExchangeRate function
+            double weightedAverageRate = CurrencyFunction.calculateWeightedAverageExchangeRate(
+                    connection,
+                    LocalDateTime.of(2023, 12, 6, 0, 0),
+                    1,
+                    2,
+                    "average"
+            );
 
-            // Exemple d'appel de la fonction
-            LocalDateTime date = LocalDateTime.of(2023, 12, 6, 12, 0);
-            int sourceCurrencyId = 1;
-            targetCurrencyId = 2;
-
-            double weightedAverageRate = CurrencyFunction.calculateWeightedAverageExchangeRate(connection, date);
-
-            // Affichage du résultat
             System.out.println("Taux de change moyen pondéré : " + weightedAverageRate);
 
         } finally {
