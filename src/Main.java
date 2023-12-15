@@ -1,3 +1,4 @@
+import functions.BalanceCalculator;
 import model.Currency;
 import model.Transaction;
 import repository.ConnectionConfiguration;
@@ -55,6 +56,14 @@ public class Main {
             for (Transaction transaction : allTransactions) {
                 System.out.println(transaction);
             }
+
+            // Test de la fonction getBalanceChanges
+            int accountId = 1; // Remplacez par l'ID du compte bancaire réel
+            LocalDateTime startDate = LocalDateTime.of(2023, 12, 1, 0, 0);
+            LocalDateTime endDate = LocalDateTime.of(2023, 12, 31, 23, 59);
+
+            double balanceChanges = BalanceCalculator.getBalanceChanges(accountId, startDate, endDate);
+            System.out.println("Balance Changes for Account ID " + accountId + " between " + startDate + " and " + endDate + ": " + balanceChanges);
 
         } finally {
             try {
