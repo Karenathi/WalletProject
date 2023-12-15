@@ -9,17 +9,19 @@ public class Transaction {
     private double amount;
     private String type;
     private LocalDateTime date;
+    private int accountId;
+    private int categoryId;
 
-    // Constructeurs, getters et setters
-    public Transaction() {
-    }
 
-    public Transaction(int id, String label, double amount, String type, LocalDateTime date, Account account) {
+    // Constructeurs, getters et setter
+    public Transaction(int id, String label, double amount, String type, LocalDateTime date, int accountId, int categoryId) {
         this.id = id;
         this.label = label;
         this.amount = amount;
         this.type = type;
         this.date = date;
+        this.accountId = accountId;
+        this.categoryId = categoryId;
     }
 
     public int getId() {
@@ -62,6 +64,23 @@ public class Transaction {
         this.date = date;
     }
 
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+
     // Equals and HashCode
     @Override
     public boolean equals(Object o) {
@@ -86,6 +105,8 @@ public class Transaction {
                 "id='" + id + '\'' +
                 ", amount='" + amount + '\'' +
                 ", label='" + label + '\'' +
-                ", date=" + date;
+                ", date=" + date + '\'' +
+                ", accountId =" + accountId +  '\''+
+                ", categoryId = " + categoryId;
     }
 }
