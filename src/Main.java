@@ -1,4 +1,5 @@
 import model.Currency;
+import model.Transaction;
 import repository.ConnectionConfiguration;
 import repository.CurrencyRepository;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import functions.CurrencyFunction;
+import repository.TransactionRepository;
 
 public class Main {
     public static void main(String[] args) {
@@ -42,11 +44,17 @@ public class Main {
                 System.out.println("Currency with ID " + targetCurrencyId + " not found.");
             }
 
-
-
+             // Function test
             double result = CurrencyFunction.calculateExchangeRate(connection, LocalDateTime.of(2023, 12, 6, 0, 0), 1, 2, CurrencyFunction.CalculationType.AVERAGE);
             System.out.println("Taux de change moyen pondéré : " + result);
 
+            TransactionRepository transactionRepository = new TransactionRepository(connection);
+            // Get transactions
+            List<Transaction> allTransactions = transactionRepository.findAll();
+            System.out.println("All Transactions:");
+            for (Transaction transaction : allTransactions) {
+                System.out.println(transaction);
+            }
 
         } finally {
             try {

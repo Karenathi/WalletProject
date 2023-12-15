@@ -14,6 +14,8 @@ public class Transaction {
 
 
     // Constructeurs, getters et setter
+
+
     public Transaction(int id, String label, double amount, String type, LocalDateTime date, int accountId, int categoryId) {
         this.id = id;
         this.label = label;

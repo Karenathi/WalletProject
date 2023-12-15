@@ -29,15 +29,19 @@ public class AccountRepository implements CrudOperations<Account> {
         return account;
     }
 
-    private Transaction createTransactionFromResultSet(ResultSet resultSet) throws SQLException{
-        Transaction transaction = new Transaction();
-        transaction.setId(resultSet.getInt("id"));
-        transaction.setLabel(resultSet.getString("label"));
-        transaction.setAmount(resultSet.getDouble("amount"));
-        transaction.setType(resultSet.getString("transaction_type"));
-        transaction.setDate(resultSet.getTimestamp("transaction_date").toLocalDateTime());
+    private Transaction createTransactionFromResultSet(ResultSet resultSet) throws SQLException {
+        Transaction transaction = new Transaction(
+                resultSet.getInt("id"),
+                resultSet.getString("label"),
+                resultSet.getDouble("amount"),
+                resultSet.getString("type"),
+                resultSet.getTimestamp("date").toLocalDateTime(),
+                resultSet.getInt("accountId"),
+                resultSet.getInt("categoryId")
+        );
         return transaction;
     }
+
     @Override
     public List<Account> findAll() {
         List<Account> accounts = new ArrayList<>();

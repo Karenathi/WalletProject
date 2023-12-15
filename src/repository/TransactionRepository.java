@@ -9,6 +9,10 @@ import java.util.List;
 public class TransactionRepository implements CrudOperations<Transaction> {
     Connection connection;
 
+    public TransactionRepository(Connection connection) {
+        this.connection = connection;
+    }
+
     private Transaction createTransactionFromResultSet(ResultSet resultSet) throws SQLException {
         Transaction transaction = new Transaction(
                 resultSet.getInt("id"),
@@ -16,12 +20,11 @@ public class TransactionRepository implements CrudOperations<Transaction> {
                 resultSet.getDouble("amount"),
                 resultSet.getString("type"),
                 resultSet.getTimestamp("date").toLocalDateTime(),
-                resultSet.getInt("account_id"),
+                resultSet.getInt("account"),
                 resultSet.getInt("category_id")
         );
         return transaction;
     }
-
 
     @Override
     public List<Transaction> findAll() {
@@ -45,7 +48,7 @@ public class TransactionRepository implements CrudOperations<Transaction> {
 
     @Override
     public Transaction findById(int id) {
-        String sql = "SELECT * FROM transactions WHERE id = ?"; // Modifier le nom de la table
+        String sql = "SELECT * FROM transactions WHERE id = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -72,8 +75,8 @@ public class TransactionRepository implements CrudOperations<Transaction> {
             preparedStatement.setDouble(2, updatedEntity.getAmount());
             preparedStatement.setString(3, updatedEntity.getType());
             preparedStatement.setTimestamp(4, Timestamp.valueOf(updatedEntity.getDate()));
-            preparedStatement.setInt(5, updatedEntity.getAccountId()); // Ajouter cette ligne pour mettre à jour l'ID du compte
-            preparedStatement.setInt(6, updatedEntity.getCategoryId()); // Ajouter cette ligne pour mettre à jour l'ID de la catégorie
+            preparedStatement.setInt(5, updatedEntity.getAccountId());
+            preparedStatement.setInt(6, updatedEntity.getCategoryId());
             preparedStatement.setInt(7, id);
 
             preparedStatement.executeUpdate();
