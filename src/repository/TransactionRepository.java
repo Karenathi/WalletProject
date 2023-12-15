@@ -8,19 +8,25 @@ import java.util.List;
 
 public class TransactionRepository implements CrudOperations<Transaction> {
     Connection connection;
+
     private Transaction createTransactionFromResultSet(ResultSet resultSet) throws SQLException {
-        Transaction transaction = new Transaction();
-        transaction.setId(resultSet.getInt("id"));
-        transaction.setLabel(resultSet.getString("label"));
-        transaction.setAmount(resultSet.getDouble("amount"));
-        transaction.setType(resultSet.getString("transaction_type"));
-        transaction.setDate(resultSet.getTimestamp("transaction_date").toLocalDateTime());
+        Transaction transaction = new Transaction(
+                resultSet.getInt("id"),
+                resultSet.getString("label"),
+                resultSet.getDouble("amount"),
+                resultSet.getString("type"),
+                resultSet.getTimestamp("date").toLocalDateTime(),
+                resultSet.getInt("account_id"),
+                resultSet.getInt("category_id")
+        );
         return transaction;
     }
+
+
     @Override
     public List<Transaction> findAll() {
         List<Transaction> transactions = new ArrayList<>();
-        String sql = "SELECT * FROM transaction";
+        String sql = "SELECT * FROM transactions"; // Modifier le nom de la table
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -31,7 +37,7 @@ public class TransactionRepository implements CrudOperations<Transaction> {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error"+e.getMessage());;
+            System.out.println("Error: " + e.getMessage());
         }
 
         return transactions;
@@ -39,7 +45,7 @@ public class TransactionRepository implements CrudOperations<Transaction> {
 
     @Override
     public Transaction findById(int id) {
-        String sql = "SELECT * FROM transaction WHERE id = ?";
+        String sql = "SELECT * FROM transactions WHERE id = ?"; // Modifier le nom de la table
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -51,29 +57,29 @@ public class TransactionRepository implements CrudOperations<Transaction> {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error"+e.getMessage());;
+            System.out.println("Error: " + e.getMessage());
         }
 
         return null;
-
     }
 
     @Override
     public void updateById(int id, Transaction updatedEntity) {
-        String sql = "UPDATE transaction SET label = ?, amount = ?, transaction_type = ?, transaction_date = ? WHERE id = ?";
+        String sql = "UPDATE transactions SET label = ?, amount = ?, type = ?, date = ?, account_id = ?, category_id = ? WHERE id = ?"; // Modifier le nom de la table et les colonnes
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, updatedEntity.getLabel());
             preparedStatement.setDouble(2, updatedEntity.getAmount());
             preparedStatement.setString(3, updatedEntity.getType());
             preparedStatement.setTimestamp(4, Timestamp.valueOf(updatedEntity.getDate()));
-            preparedStatement.setInt(5, id);
+            preparedStatement.setInt(5, updatedEntity.getAccountId()); // Ajouter cette ligne pour mettre à jour l'ID du compte
+            preparedStatement.setInt(6, updatedEntity.getCategoryId()); // Ajouter cette ligne pour mettre à jour l'ID de la catégorie
+            preparedStatement.setInt(7, id);
 
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("Error"+e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
-
     }
 }
