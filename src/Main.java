@@ -1,4 +1,5 @@
 import functions.BalanceCalculator;
+import functions.CategoryFunction;
 import model.Currency;
 import model.Transaction;
 import repository.ConnectionConfiguration;
@@ -65,14 +66,22 @@ public class Main {
             double balanceChanges = BalanceCalculator.getBalanceChanges(accountId, startDate, endDate);
             System.out.println("Balance Changes for Account ID " + accountId + " between " + startDate + " and " + endDate + ": " + balanceChanges);
 
+
+
+            CategoryFunction.CategorySum categorySum = CategoryFunction.getCategorySum(accountId, startDate, endDate);
+            System.out.println("Restaurant: " + categorySum.getRestaurant());
+            System.out.println("Salaire: " + categorySum.getSalaire());
+
+
         } finally {
             try {
-                if (connection != null) {
+                if (connection != null && !connection.isClosed()) {
                     connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+
     }
 }
