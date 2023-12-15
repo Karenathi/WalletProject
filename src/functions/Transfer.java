@@ -1,6 +1,5 @@
 package functions;
 
-import model.Account;
 import model.Transaction;
 import repository.ConnectionConfiguration;
 
@@ -18,20 +17,29 @@ public class Transfer {
                 throw new RuntimeException("Un compte ne peut pas effectuer un transfert vers lui-même.");
             }
 
-            Transaction debitTransaction = new Transaction();
+            Transaction debitTransaction = new Transaction(
+                    0,
+                    "Debit",
+                    amount,
+                    "debit",
+                    LocalDateTime.now(),
+                    debitAccountId,
+                    0
+            );
             debitTransaction.setAmount(amount);
-            debitTransaction.setType("debit");
 
-
-            Transaction creditTransaction = new Transaction();
+            Transaction creditTransaction = new Transaction(
+                    0,
+                    "Credit",
+                    amount,
+                    "credit",
+                    LocalDateTime.now(),
+                    creditAccountId,
+                    0
+            );
             creditTransaction.setAmount(amount);
-            creditTransaction.setType("Crédit");
 
-            performTransaction(debitAccountId, debitTransaction, connection);
 
-            performTransaction(creditAccountId, creditTransaction, connection);
-
-            recordTransferHistory(debitTransaction.getId(), creditTransaction.getId(), LocalDateTime.now(), connection);
 
             connection.commit();
         } catch (SQLException e) {

@@ -2,6 +2,7 @@ package repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConnectionConfiguration {
     private static ConnectionConfiguration instance;
@@ -36,5 +37,16 @@ public class ConnectionConfiguration {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public void closeConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+                System.out.println("Connection closed successfully");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error closing connection: " + e.getMessage());
+        }
     }
 }
