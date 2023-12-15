@@ -14,6 +14,10 @@ public class Balance {
         this.datetime = datetime;
     }
 
+    public Balance() {
+
+    }
+
     public int getId() {
         return id;
     }
