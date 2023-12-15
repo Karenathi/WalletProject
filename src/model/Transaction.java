@@ -12,8 +12,7 @@ public class Transaction {
     private int accountId;
     private int categoryId;
 
-
-    // Constructeurs, getters et setter
+    // Constructors, getters et setter
 
 
     public Transaction(int id, String label, double amount, String type, LocalDateTime date, int accountId, int categoryId) {
@@ -24,6 +23,15 @@ public class Transaction {
         this.date = date;
         this.accountId = accountId;
         this.categoryId = categoryId;
+    }
+
+    public Transaction(int id, String label, double amount, String type, LocalDateTime date, int accountId){
+        this.id = id;
+        this.label = label;
+        this.amount = amount;
+        this.type = type;
+        this.date = date;
+        this.accountId = accountId;
     }
 
     public int getId() {
