@@ -1,10 +1,14 @@
 package repository;
 
+import model.Category;
 import model.Transaction;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TransactionRepository implements CrudOperations<Transaction> {
     Connection connection;
@@ -84,5 +88,27 @@ public class TransactionRepository implements CrudOperations<Transaction> {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+
+    public Map<String, Double> findByAccountId(int accountId, LocalDateTime startDate, LocalDateTime endDate){
+        Map<String, Double> result = new HashMap<>();
+        String sql = "SELECT category.name, SUM(amount) as total_amount FROM transactions " +
+                "LEFT JOIN transactions ON transactions.category_id = category.id"+
+                "WHERE account_id = ? AND transaction_date BETWEEN ? AND ? " +
+                "GROUP BY category.name";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, accountId);
+            preparedStatement.setDate(2, Date.valueOf(String.valueOf(startDate)));
+            preparedStatement.setDate(3, Date.valueOf(String.valueOf(endDate)));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                String categoryName = resultSet.getString("name");
+                double totalAmount = resultSet.getDouble("total_amount");
+                result.put(categoryName, totalAmount);
+            }
+        }catch(Exception e){
+            System.out.println("Error:"+e.getMessage());
+        }
+        return result;
     }
 }
